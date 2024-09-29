@@ -1,6 +1,0 @@
-@CityInfo_Dev_HostAddress = http://localhost:5019
-
-GET {{CityInfo_Dev_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
