@@ -14,20 +14,21 @@ namespace CityInfo_Dev.Controllers;
 public class CitiesController : ControllerBase // Controller
 {
     [HttpGet]
-    public JsonResult GetCities()
+    public ActionResult<IEnumerable<CityDto>> GetCities()
     {
-        return new JsonResult(CitiesDataStore.Current.Cities);
-        // return new JsonResult(
-        //     new List<object>
-        //     {
-        //         new { Id = 1, Name = "New York City" },
-        //         new { Id = 2, Name = "Antwerp" }
-        //     });
+        return Ok(CitiesDataStore.Current.Cities);
     }
     
     [HttpGet("{id}")]
-    public JsonResult GetCity(int id)
+    public ActionResult<CityDto> GetCity(int id)
     {
-        return new JsonResult(CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == id));
+        CityDto? cityToReturn = CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == id);
+        
+        if (cityToReturn == null)
+        {
+            return NotFound();
+        }
+        
+        return Ok(cityToReturn);
     }
 }
