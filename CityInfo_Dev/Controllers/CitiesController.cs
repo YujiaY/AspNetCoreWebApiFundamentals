@@ -1,5 +1,6 @@
 #region
 
+using CityInfo_Dev.Models;
 using Microsoft.AspNetCore.Mvc;
 
 #endregion
@@ -12,14 +13,21 @@ namespace CityInfo_Dev.Controllers;
 [Route("api/cities")]
 public class CitiesController : ControllerBase // Controller
 {
-    [HttpGet()]
+    [HttpGet]
     public JsonResult GetCities()
     {
-        return new JsonResult(
-            new List<object>
-            {
-                new { Id = 1, Name = "New York City" },
-                new { Id = 2, Name = "Antwerp" }
-            });
+        return new JsonResult(CitiesDataStore.Current.Cities);
+        // return new JsonResult(
+        //     new List<object>
+        //     {
+        //         new { Id = 1, Name = "New York City" },
+        //         new { Id = 2, Name = "Antwerp" }
+        //     });
+    }
+    
+    [HttpGet("{id}")]
+    public JsonResult GetCity(int id)
+    {
+        return new JsonResult(CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == id));
     }
 }
