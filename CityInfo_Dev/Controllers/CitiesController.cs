@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace CityInfo_Dev.Controllers;
 
 [ApiController]
+// [controller] is a token that will be replaced by the name of the controller, in this case, Cities
+// [Route("api/[controller]")]
+[Route("api/cities")]
 public class CitiesController : ControllerBase // Controller
 {
-    [HttpGet("api/cities")]
+    [HttpGet()]
     public JsonResult GetCities()
     {
         return new JsonResult(
