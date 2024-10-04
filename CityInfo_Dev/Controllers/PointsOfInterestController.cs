@@ -1,5 +1,6 @@
 using CityInfo_Dev.Models;
 using CityInfo.API.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CityInfo_Dev.Controllers;
@@ -64,5 +65,46 @@ public class PointsOfInterestController : ControllerBase
                 pointOfInterestId = maxPointOfInterestId
             },
             finalPointOfInterest);
+    }
+    
+    [HttpPatch("{pointOfInterestId}")]
+    public async Task<ActionResult> UpdatePointOfInterest(
+        int cityId,
+        int pointOfInterestId,
+        JsonPatchDocument<PointOfInterestForUpdateDto> patchDocument)
+    {
+        CityDto? city = CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == cityId);
+
+        if (city == null)
+        {
+            return NotFound();
+        }
+        
+        var pointOfInterestFromStore = city.PointsOfInterest
+            .FirstOrDefault(p => p.Id == pointOfInterestId);
+        
+        if (pointOfInterestFromStore == null)
+        {
+            return NotFound();
+        }
+        
+        var pointOfInterestToPatch = new PointOfInterestForUpdateDto
+        {
+            Name = pointOfInterestFromStore.Name,
+            Description = pointOfInterestFromStore.Description
+        };
+        
+        patchDocument.ApplyTo(pointOfInterestToPatch, ModelState);
+        
+        if(ModelState.IsValid == false)
+        {
+            var result = BadRequest(ModelState);
+            return result;
+        }
+        
+        pointOfInterestFromStore.Name = pointOfInterestToPatch.Name;
+        pointOfInterestFromStore.Description = pointOfInterestToPatch.Description;
+        
+        return NoContent();
     }
 }

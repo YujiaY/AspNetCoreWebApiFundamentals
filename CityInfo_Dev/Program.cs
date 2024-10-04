@@ -12,7 +12,7 @@ builder.Services.AddControllers(options =>
     {
         options.ReturnHttpNotAcceptable = true;
     })
-    // .AddNewtonsoftJson()
+    .AddNewtonsoftJson()
     .AddXmlDataContractSerializerFormatters();
 
 var app = builder.Build();
