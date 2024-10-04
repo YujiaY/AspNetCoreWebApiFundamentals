@@ -36,7 +36,7 @@ public class PointsOfInterestController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<PointOfInterestDto>> CreatePointOfInterest(
+    public ActionResult<PointOfInterestDto> CreatePointOfInterest(
         int cityId,
         PointOfInterestForCreationDto pointOfInterest)
     {
@@ -68,7 +68,7 @@ public class PointsOfInterestController : ControllerBase
     }
     
     [HttpPatch("{pointOfInterestId}")]
-    public async Task<ActionResult> UpdatePointOfInterest(
+    public ActionResult UpdatePointOfInterest(
         int cityId,
         int pointOfInterestId,
         JsonPatchDocument<PointOfInterestForUpdateDto> patchDocument)
@@ -111,6 +111,29 @@ public class PointsOfInterestController : ControllerBase
         pointOfInterestFromStore.Name = pointOfInterestToPatch.Name;
         pointOfInterestFromStore.Description = pointOfInterestToPatch.Description;
         
+        return NoContent();
+    }
+
+    [HttpDelete("{pointOfInterestId}")]
+    public ActionResult DeletePointOfInterest(int cityId, int pointOfInterestId)
+    {
+        CityDto? city = CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == cityId);
+
+        if (city == null)
+        {
+            return NotFound();
+        }
+
+        var pointOfInterestFromStore = city.PointsOfInterest
+            .FirstOrDefault(p => p.Id == pointOfInterestId);
+
+        if (pointOfInterestFromStore == null)
+        {
+            return NotFound();
+        }
+
+        city.PointsOfInterest.Remove(pointOfInterestFromStore);
+
         return NoContent();
     }
 }
