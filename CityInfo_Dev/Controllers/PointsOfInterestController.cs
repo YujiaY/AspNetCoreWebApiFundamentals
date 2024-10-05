@@ -9,12 +9,40 @@ namespace CityInfo_Dev.Controllers;
 [ApiController]
 public class PointsOfInterestController : ControllerBase
 {
+    ILogger<PointsOfInterestController> _logger;
+    public const int CityNotFound = 1000;
+    public const int InvalidInput = 1001;
+
+    public PointsOfInterestController(ILogger<PointsOfInterestController> logger)
+    {
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        // if (_logger == null)
+        // {
+        // HttpContext is not available in the constructor
+        //     _logger = HttpContext?.RequestServices?
+        //         .GetService<ILogger<PointsOfInterestController>>();
+        //               // ?? throw new InvalidOperationException();
+        // }
+    }
+
     [HttpGet]
     public ActionResult<IEnumerable<PointOfInterestDto>> GetPointsOfInterest(int cityId)
     {
         CityDto? city = CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == cityId);
 
-        if (city == null) return NotFound();
+        if (city == null)
+        {
+            if (_logger == null)
+            {
+                 _logger = HttpContext.RequestServices
+                          .GetService<ILogger<PointsOfInterestController>>()
+                      ?? throw new InvalidOperationException();
+            }
+            _logger.LogInformation(new EventId(CityNotFound, "CityCouldNotBeFound"), 
+                "City with id {CityId} wasn't found when accessing points of interest", 
+                cityId);
+            return NotFound();
+        }
 
         return Ok(city.PointsOfInterest);
     }
@@ -55,7 +83,7 @@ public class PointsOfInterestController : ControllerBase
             Name = pointOfInterest.Name,
             Description = pointOfInterest.Description
         };
-        
+
         city.PointsOfInterest.Add(finalPointOfInterest);
 
         return CreatedAtRoute("GetPointOfInterest",
@@ -66,7 +94,7 @@ public class PointsOfInterestController : ControllerBase
             },
             finalPointOfInterest);
     }
-    
+
     [HttpPatch("{pointOfInterestId}")]
     public ActionResult UpdatePointOfInterest(
         int cityId,
@@ -75,28 +103,22 @@ public class PointsOfInterestController : ControllerBase
     {
         CityDto? city = CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == cityId);
 
-        if (city == null)
-        {
-            return NotFound();
-        }
-        
+        if (city == null) return NotFound();
+
         var pointOfInterestFromStore = city.PointsOfInterest
             .FirstOrDefault(p => p.Id == pointOfInterestId);
-        
-        if (pointOfInterestFromStore == null)
-        {
-            return NotFound();
-        }
-        
+
+        if (pointOfInterestFromStore == null) return NotFound();
+
         var pointOfInterestToPatch = new PointOfInterestForUpdateDto
         {
             Name = pointOfInterestFromStore.Name,
             Description = pointOfInterestFromStore.Description
         };
-        
+
         patchDocument.ApplyTo(pointOfInterestToPatch, ModelState);
-        
-        if(ModelState.IsValid == false)
+
+        if (ModelState.IsValid == false)
         {
             var result = BadRequest(ModelState);
             return result;
@@ -107,10 +129,10 @@ public class PointsOfInterestController : ControllerBase
             var result = BadRequest(ModelState);
             return result;
         }
-        
+
         pointOfInterestFromStore.Name = pointOfInterestToPatch.Name;
         pointOfInterestFromStore.Description = pointOfInterestToPatch.Description;
-        
+
         return NoContent();
     }
 
@@ -119,18 +141,12 @@ public class PointsOfInterestController : ControllerBase
     {
         CityDto? city = CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == cityId);
 
-        if (city == null)
-        {
-            return NotFound();
-        }
+        if (city == null) return NotFound();
 
         var pointOfInterestFromStore = city.PointsOfInterest
             .FirstOrDefault(p => p.Id == pointOfInterestId);
 
-        if (pointOfInterestFromStore == null)
-        {
-            return NotFound();
-        }
+        if (pointOfInterestFromStore == null) return NotFound();
 
         city.PointsOfInterest.Remove(pointOfInterestFromStore);
 
