@@ -1,9 +1,19 @@
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.StaticFiles;
+using Serilog;
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .WriteTo.Console()
+    .WriteTo.File(
+        Path.Combine("dev_logs", "city info.log"),
+        rollingInterval: RollingInterval.Day
+        )
+    .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
+// builder.Logging.ClearProviders();  // Removed because of UseSerilog.
+// builder.Logging.AddConsole();  // Removed because of UseSerilog.
+builder.Host.UseSerilog();
 
 // Add services to the container.
 builder.Services.AddControllers(options =>
