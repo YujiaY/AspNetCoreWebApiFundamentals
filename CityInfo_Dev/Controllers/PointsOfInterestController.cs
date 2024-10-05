@@ -1,4 +1,5 @@
 using CityInfo_Dev.Models;
+using CityInfo_Dev.Services;
 using CityInfo.API.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -9,13 +10,20 @@ namespace CityInfo_Dev.Controllers;
 [ApiController]
 public class PointsOfInterestController : ControllerBase
 {
-    ILogger<PointsOfInterestController> _logger;
-    public const int CityNotFound = 1000;
-    public const int InvalidInput = 1001;
+    private ILogger<PointsOfInterestController> _logger;
+    private readonly LocalMailService _localMailService;
+    
+    private const int CityNotFound = 1000;
+    private const int InvalidInput = 1001;
 
-    public PointsOfInterestController(ILogger<PointsOfInterestController> logger)
+    public PointsOfInterestController(
+        ILogger<PointsOfInterestController> logger,
+        LocalMailService localMailService
+        )
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _localMailService = localMailService ??
+                            throw new ArgumentNullException(nameof(localMailService));
         // if (_logger == null)
         // {
         // HttpContext is not available in the constructor
@@ -28,7 +36,7 @@ public class PointsOfInterestController : ControllerBase
     [HttpGet]
     public ActionResult<IEnumerable<PointOfInterestDto>> GetPointsOfInterest(int cityId)
     {
-        throw new Exception("Test exception wahaha~");
+        // throw new Exception("Test exception wahaha~");
         try
         {
             CityDto? city = CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == cityId);
@@ -156,7 +164,8 @@ public class PointsOfInterestController : ControllerBase
             .FirstOrDefault(p => p.Id == pointOfInterestId);
 
         if (pointOfInterestFromStore == null) return NotFound();
-
+        _localMailService.Send("Point of interest deleted.",
+            $"Point of interest {pointOfInterestFromStore.Name} with id {pointOfInterestFromStore.Id} was deleted.");
         city.PointsOfInterest.Remove(pointOfInterestFromStore);
 
         return NoContent();
