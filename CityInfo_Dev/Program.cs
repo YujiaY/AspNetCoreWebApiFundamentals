@@ -1,3 +1,4 @@
+using CityInfo_Dev;
 using CityInfo_Dev.Services;
 using Microsoft.AspNetCore.StaticFiles;
 using Serilog;
@@ -31,6 +32,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
+
+builder.Services.AddSingleton<CitiesDataStore>();
+
 #if DEBUG
 builder.Services.AddTransient<IMailService, LocalMailService>();
 #else

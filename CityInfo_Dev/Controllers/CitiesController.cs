@@ -11,18 +11,18 @@ namespace CityInfo_Dev.Controllers;
 // [controller] is a token that will be replaced by the name of the controller, in this case, Cities
 // [Route("api/[controller]")]
 [Route("api/cities")]
-public class CitiesController : ControllerBase // Controller
+public class CitiesController(CitiesDataStore citiesDataStore) : ControllerBase // Controller
 {
     [HttpGet]
     public ActionResult<IEnumerable<CityDto>> GetCities()
     {
-        return Ok(CitiesDataStore.Current.Cities);
+        return Ok(citiesDataStore.Cities);
     }
     
     [HttpGet("{id}")]
     public ActionResult<CityDto> GetCity(int id)
     {
-        CityDto? cityToReturn = CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == id);
+        CityDto? cityToReturn = citiesDataStore.Cities.FirstOrDefault(c => c.Id == id);
         
         if (cityToReturn == null)
         {
