@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Debug()
+    .MinimumLevel.Information()
     .WriteTo.Console()
     .WriteTo.File(
         Path.Combine("dev_logs", "city info.log"),

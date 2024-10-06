@@ -1,9 +1,9 @@
 namespace CityInfo_Dev.Services;
 
-public class CloudMailService : IMailService
+public class CloudMailService(IConfiguration configuration) : IMailService
 {
-    private string _mailTo = "admin_cloud@mycompany.com";
-    private string _mailFrom = "noreply_cloud@mycompany.com";
+    private string _mailTo = configuration["mailSettings:mailToAddress"] ?? string.Empty;
+    private string _mailFrom = configuration["mailSettings:mailFromAddress"] ?? string.Empty;
 
     public void Send(string subject, string message)
     {
