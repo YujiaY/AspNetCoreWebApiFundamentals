@@ -11,19 +11,19 @@ namespace CityInfo_Dev.Controllers;
 public class PointsOfInterestController : ControllerBase
 {
     private ILogger<PointsOfInterestController> _logger;
-    private readonly LocalMailService _localMailService;
+    private readonly IMailService _localMailService;
     
     private const int CityNotFound = 1000;
     private const int InvalidInput = 1001;
 
     public PointsOfInterestController(
         ILogger<PointsOfInterestController> logger,
-        LocalMailService localMailService
+        IMailService mailService
         )
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _localMailService = localMailService ??
-                            throw new ArgumentNullException(nameof(localMailService));
+        _localMailService = mailService ??
+                            throw new ArgumentNullException(nameof(mailService));
         // if (_logger == null)
         // {
         // HttpContext is not available in the constructor
