@@ -38,8 +38,8 @@ builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 builder.Services.AddSingleton<CitiesDataStore>();
 
 builder.Services.AddDbContext<CityInfoContext>(dbContextOptions =>
-    // dbContextOptions.UseSqlite(builder.Configuration.GetConnectionString("cityinfo_dev"))
-    dbContextOptions.UseSqlite("Data source=CityInfo_dev.db")
+    dbContextOptions.UseSqlite(builder.Configuration.GetConnectionString("cityinfo_dev"))
+    // dbContextOptions.UseSqlite("Data source=CityInfo_dev.db")
 );
 
 #if DEBUG
