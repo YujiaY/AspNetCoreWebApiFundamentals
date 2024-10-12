@@ -42,6 +42,8 @@ builder.Services.AddDbContext<CityInfoContext>(dbContextOptions =>
     // dbContextOptions.UseSqlite("Data source=CityInfo_dev.db")
 );
 
+builder.Services.AddScoped<ICityInfoRepository, CityInfoRepository>();
+
 #if DEBUG
 builder.Services.AddTransient<IMailService, LocalMailService>();
 #else
