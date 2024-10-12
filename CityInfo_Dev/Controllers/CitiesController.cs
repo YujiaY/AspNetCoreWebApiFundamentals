@@ -32,17 +32,24 @@ public class CitiesController(ICityInfoRepository cityInfoRepository, IMapper ma
     }
     
     [HttpGet("{id}")]
-    public async Task<ActionResult<CityDto>> GetCity(int id, bool includePointsOfInterest = false)
+    public async Task<IActionResult> GetCity(int id, bool includePointsOfInterest = false)
     {
         var cityEntity = await cityInfoRepository.GetCityAsync(id, includePointsOfInterest);
 
+        if (cityEntity == null)
+        {
+            return NotFound();
+        }
+        
         if (includePointsOfInterest)
         {
-            return Ok(mapper.Map<CityDto>(cityEntity));    
+            CityDto? result1 = mapper.Map<CityDto>(cityEntity);
+            return Ok(result1);    
         }
         else
         {
-            return Ok(mapper.Map<CityWithoutPointsOfInterestDto>(cityEntity));
+            CityWithoutPointsOfInterestDto? result2 = mapper.Map<CityWithoutPointsOfInterestDto>(cityEntity);
+            return Ok(result2);
         }
         
         // City? cityToReturn = await cityInfoRepository.GetCityAsync(id, false);
