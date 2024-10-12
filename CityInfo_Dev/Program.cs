@@ -44,6 +44,9 @@ builder.Services.AddDbContext<CityInfoContext>(dbContextOptions =>
 
 builder.Services.AddScoped<ICityInfoRepository, CityInfoRepository>();
 
+var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 #if DEBUG
 builder.Services.AddTransient<IMailService, LocalMailService>();
 #else

@@ -1,5 +1,6 @@
 #region
 
+using AutoMapper;
 using CityInfo_Dev.Entities;
 using CityInfo_Dev.Models;
 using CityInfo_Dev.Services;
@@ -13,20 +14,21 @@ namespace CityInfo_Dev.Controllers;
 // [controller] is a token that will be replaced by the name of the controller, in this case, Cities
 // [Route("api/[controller]")]
 [Route("api/cities")]
-public class CitiesController(ICityInfoRepository cityInfoRepository) : ControllerBase // Controller
+public class CitiesController(ICityInfoRepository cityInfoRepository, IMapper mapper) : ControllerBase // Controller
 {
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterest>>> GetCities()
+    public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities()
     {
         var cityEntities = await cityInfoRepository.GetCitiesAsync();
         
-        var dtos = cityEntities.Select(e => new CityWithoutPointsOfInterest()
-        {
-            Id = e.Id,
-            Name = e.Name,
-            Description = e.Description
-        });
-        return Ok(dtos);
+        // var dtos = cityEntities.Select(e => new CityWithoutPointsOfInterestDto()
+        // {
+        //     Id = e.Id,
+        //     Name = e.Name,
+        //     Description = e.Description
+        // });
+        // return Ok(dtos);
+        return Ok(mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cityEntities));
     }
     
     [HttpGet("{id}")]
