@@ -4,11 +4,10 @@ using CityInfo_Dev.Models;
 
 namespace CityInfo_Dev.Profiles;
 
-public class CityProfile : Profile
+public class PointOfInterestProfile : Profile
 {
-    public CityProfile()
+    public PointOfInterestProfile()
     {
-        CreateMap<City, CityDto>();
-        CreateMap<City, CityWithoutPointsOfInterestDto>();
+        CreateMap<PointOfInterest, PointOfInterestDto>(); 
     }
 }

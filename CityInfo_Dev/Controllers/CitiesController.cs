@@ -21,6 +21,7 @@ public class CitiesController(ICityInfoRepository cityInfoRepository, IMapper ma
     {
         var cityEntities = await cityInfoRepository.GetCitiesAsync();
         
+        return Ok(mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cityEntities));
         // var dtos = cityEntities.Select(e => new CityWithoutPointsOfInterestDto()
         // {
         //     Id = e.Id,
@@ -28,12 +29,22 @@ public class CitiesController(ICityInfoRepository cityInfoRepository, IMapper ma
         //     Description = e.Description
         // });
         // return Ok(dtos);
-        return Ok(mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cityEntities));
     }
     
     [HttpGet("{id}")]
-    public ActionResult<City> GetCity(int id)
+    public async Task<ActionResult<CityDto>> GetCity(int id, bool includePointsOfInterest = false)
     {
+        var cityEntity = await cityInfoRepository.GetCityAsync(id, includePointsOfInterest);
+
+        if (includePointsOfInterest)
+        {
+            return Ok(mapper.Map<CityDto>(cityEntity));    
+        }
+        else
+        {
+            return Ok(mapper.Map<CityWithoutPointsOfInterestDto>(cityEntity));
+        }
+        
         // City? cityToReturn = await cityInfoRepository.GetCityAsync(id, false);
         //
         // if (cityToReturn == null)
@@ -42,6 +53,5 @@ public class CitiesController(ICityInfoRepository cityInfoRepository, IMapper ma
         // }
         //
         // return Ok(cityToReturn);
-        return Ok();
     }
 }
