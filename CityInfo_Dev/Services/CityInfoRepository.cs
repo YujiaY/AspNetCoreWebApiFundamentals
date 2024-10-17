@@ -37,12 +37,28 @@ public class CityInfoRepository(CityInfoContext context) : ICityInfoRepository
                 .Where(p => p.CityId == cityId && p.Id == pointOfInterestId)
                 .FirstOrDefaultAsync();
     }
-    
+
     public async Task<IEnumerable<PointOfInterest>> GetPointsOfInterestForCityAsync(int cityId)
     {
         return await context.PointsOfInterest
             .Where(p => p.CityId == cityId)
             .ToListAsync();
+    }
+
+    public async Task AddPointOfInterestForCityAsync(int cityId, PointOfInterest pointOfInterest)
+    {
+        var city = await GetCityAsync(cityId, false);
+        if (city != null)
+        {
+            city.PointsOfInterest.Add(pointOfInterest);
+        }
+        
+        await context.SaveChangesAsync();
+    }
+
+    public async Task<bool> SaveChangesAsync()
+    {
+        return (await context.SaveChangesAsync() >= 0);
     }
 
     
