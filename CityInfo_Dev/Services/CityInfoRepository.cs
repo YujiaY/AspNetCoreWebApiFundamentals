@@ -13,6 +13,20 @@ public class CityInfoRepository(CityInfoContext context) : ICityInfoRepository
             .ToArrayAsync();
     }
 
+    public async Task<IEnumerable<City>> GetCitiesAsync(string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return await GetCitiesAsync();
+        }
+
+        name = name.Trim();
+        return await context.Cities
+            .Where(c => c.Name == name)
+            .OrderBy(c => c.Name)
+            .ToArrayAsync();
+    }
+
     public async Task<City?> GetCityAsync(int cityId, bool includePointsOfInterest)
     {
         if (includePointsOfInterest)
