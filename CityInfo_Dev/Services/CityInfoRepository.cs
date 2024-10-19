@@ -13,12 +13,14 @@ public class CityInfoRepository(CityInfoContext context) : ICityInfoRepository
             .ToArrayAsync();
     }
 
-    public async Task<IEnumerable<City>> GetCitiesAsync(string? name, string? searchQuery)
+    public async Task<IEnumerable<City>> GetCitiesAsync(
+        string? name, string? searchQuery , int pageNumber, int pageSize)
     {
-        if (string.IsNullOrWhiteSpace(name) && string.IsNullOrWhiteSpace(searchQuery))
-        {
-            return await GetCitiesAsync();
-        }
+        // Commented out because we want to enforce the use of pagination
+        // if (string.IsNullOrWhiteSpace(name) && string.IsNullOrWhiteSpace(searchQuery))
+        // {
+        //     return await GetCitiesAsync();
+        // }
         
         // collection to start from
         IQueryable<City> collection = context.Cities.AsQueryable();
@@ -36,6 +38,8 @@ public class CityInfoRepository(CityInfoContext context) : ICityInfoRepository
         }
 
         return await collection.OrderBy(c => c.Name)
+            .Skip(pageSize * (pageNumber - 1))
+            .Take(pageSize)
             .ToArrayAsync();
     }
 

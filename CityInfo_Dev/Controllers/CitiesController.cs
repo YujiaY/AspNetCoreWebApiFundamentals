@@ -16,11 +16,23 @@ namespace CityInfo_Dev.Controllers;
 [Route("api/cities")]
 public class CitiesController(ICityInfoRepository cityInfoRepository, IMapper mapper) : ControllerBase // Controller
 {
+    private const int MaxCitiesPageSize = 20;
+    
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities(
-        [FromQuery(Name = "nameFilter")] string? name, string? searchQuery)
+        [FromQuery(Name = "nameFilter")] string? name,
+        string? searchQuery,
+        int pageNumber = 1,
+        int pageSize = 10
+        )
     {
-        var cityEntities = await cityInfoRepository.GetCitiesAsync(name, searchQuery);
+        if (pageSize > MaxCitiesPageSize)
+        {
+            pageSize = MaxCitiesPageSize;
+        }
+        
+        var cityEntities = await cityInfoRepository
+            .GetCitiesAsync(name, searchQuery, pageNumber, pageSize);
         
         return Ok(mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cityEntities));
         // var dtos = cityEntities.Select(e => new CityWithoutPointsOfInterestDto()
