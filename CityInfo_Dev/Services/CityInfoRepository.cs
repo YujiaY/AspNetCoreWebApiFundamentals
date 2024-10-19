@@ -13,7 +13,7 @@ public class CityInfoRepository(CityInfoContext context) : ICityInfoRepository
             .ToArrayAsync();
     }
 
-    public async Task<IEnumerable<City>> GetCitiesAsync(
+    public async Task<(IEnumerable<City>, PaginationMetadata)> GetCitiesAsync(
         string? name, string? searchQuery , int pageNumber, int pageSize)
     {
         // Commented out because we want to enforce the use of pagination
@@ -37,10 +37,18 @@ public class CityInfoRepository(CityInfoContext context) : ICityInfoRepository
                 || c.Description != null && c.Description.Contains(searchQuery));
         }
 
-        return await collection.OrderBy(c => c.Name)
+        var totalResults = await collection.ToListAsync();
+        var metadata = new PaginationMetadata(
+            totalResults.Count,
+            pageSize,
+            pageNumber
+        );
+
+        var collectionToReturn = totalResults.OrderBy(c => c.Name)
             .Skip(pageSize * (pageNumber - 1))
-            .Take(pageSize)
-            .ToArrayAsync();
+            .Take(pageSize);
+        
+        return (collectionToReturn, metadata);
     }
 
     public async Task<City?> GetCityAsync(int cityId, bool includePointsOfInterest)

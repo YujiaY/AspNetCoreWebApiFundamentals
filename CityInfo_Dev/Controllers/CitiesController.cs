@@ -1,5 +1,6 @@
 #region
 
+using System.Text.Json;
 using AutoMapper;
 using CityInfo_Dev.Entities;
 using CityInfo_Dev.Models;
@@ -31,8 +32,10 @@ public class CitiesController(ICityInfoRepository cityInfoRepository, IMapper ma
             pageSize = MaxCitiesPageSize;
         }
         
-        var cityEntities = await cityInfoRepository
+        var (cityEntities, metadata) = await cityInfoRepository
             .GetCitiesAsync(name, searchQuery, pageNumber, pageSize);
+        
+        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(metadata));
         
         return Ok(mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cityEntities));
         // var dtos = cityEntities.Select(e => new CityWithoutPointsOfInterestDto()
