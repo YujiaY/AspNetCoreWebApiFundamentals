@@ -37,14 +37,14 @@ public class CityInfoRepository(CityInfoContext context) : ICityInfoRepository
                 || c.Description != null && c.Description.Contains(searchQuery));
         }
 
-        var totalResults = await collection.ToListAsync();
+        var totalItemCount = await collection.CountAsync();
         var metadata = new PaginationMetadata(
-            totalResults.Count,
+            totalItemCount,
             pageSize,
             pageNumber
         );
 
-        var collectionToReturn = totalResults.OrderBy(c => c.Name)
+        var collectionToReturn = collection.OrderBy(c => c.Name)
             .Skip(pageSize * (pageNumber - 1))
             .Take(pageSize);
         
