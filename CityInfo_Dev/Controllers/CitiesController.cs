@@ -18,9 +18,9 @@ public class CitiesController(ICityInfoRepository cityInfoRepository, IMapper ma
 {
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities(
-        [FromQuery(Name = "nameFilter")] string? name)
+        [FromQuery(Name = "nameFilter")] string? name, string? searchQuery)
     {
-        var cityEntities = await cityInfoRepository.GetCitiesAsync(name);
+        var cityEntities = await cityInfoRepository.GetCitiesAsync(name, searchQuery);
         
         return Ok(mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cityEntities));
         // var dtos = cityEntities.Select(e => new CityWithoutPointsOfInterestDto()

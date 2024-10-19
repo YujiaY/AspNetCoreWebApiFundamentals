@@ -39,6 +39,7 @@ builder.Services.AddSingleton<CitiesDataStore>();
 
 builder.Services.AddDbContext<CityInfoContext>(dbContextOptions =>
     dbContextOptions.UseSqlite(builder.Configuration.GetConnectionString("cityinfo_dev"))
+        .EnableSensitiveDataLogging()
     // dbContextOptions.UseSqlite("Data source=CityInfo_dev.db")
 );
 

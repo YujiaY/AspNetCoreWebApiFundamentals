@@ -13,17 +13,29 @@ public class CityInfoRepository(CityInfoContext context) : ICityInfoRepository
             .ToArrayAsync();
     }
 
-    public async Task<IEnumerable<City>> GetCitiesAsync(string? name)
+    public async Task<IEnumerable<City>> GetCitiesAsync(string? name, string? searchQuery)
     {
-        if (string.IsNullOrWhiteSpace(name))
+        if (string.IsNullOrWhiteSpace(name) && string.IsNullOrWhiteSpace(searchQuery))
         {
             return await GetCitiesAsync();
         }
+        
+        // collection to start from
+        IQueryable<City> collection = context.Cities.AsQueryable();
 
-        name = name.Trim();
-        return await context.Cities
-            .Where(c => c.Name == name)
-            .OrderBy(c => c.Name)
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            collection = collection.Where(c => c.Name == name);
+        }
+
+        if (!string.IsNullOrWhiteSpace(searchQuery))
+        {
+            searchQuery = searchQuery.Trim();
+            collection = collection.Where(c => c.Name.Contains(searchQuery)
+                || c.Description != null && c.Description.Contains(searchQuery));
+        }
+
+        return await collection.OrderBy(c => c.Name)
             .ToArrayAsync();
     }
 
