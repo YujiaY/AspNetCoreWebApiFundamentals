@@ -64,6 +64,15 @@ builder.Services.AddAuthentication("Bearer")
         };
     });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("MuseBeFromBrisbane", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireClaim("city", "Ant", "Brisbane");
+    });
+});
+
 #if DEBUG
 builder.Services.AddTransient<IMailService, LocalMailService>();
 #else

@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace CityInfo_Dev.Controllers;
 
 [Route("api/cities/{cityId}/pointsofinterest")]
+[Authorize(Policy = "MuseBeFromBrisbane")]
 [ApiController]
-[Authorize]
 public class PointsOfInterestController : ControllerBase
 {
     private ILogger<PointsOfInterestController> _logger;
@@ -51,12 +51,13 @@ public class PointsOfInterestController : ControllerBase
         // throw new Exception("Test exception wahaha~");
         try
         {
-            var userCityName = User.Claims.FirstOrDefault(c => c.Type == "city")?.Value;
-
-            if (!(await _cityInfoRepository.CityNameMatchesCityIdAsync(userCityName, cityId)))
-            {
-                return Forbid();
-            }
+            // Below not needed because of the Authorize policy
+            // var userCityName = User.Claims.FirstOrDefault(c => c.Type == "city")?.Value;
+            //
+            // if (!(await _cityInfoRepository.CityNameMatchesCityIdAsync(userCityName, cityId)))
+            // {
+            //     return Forbid();
+            // }
             
             if (!await _cityInfoRepository.CityExistsAsync(cityId))
             {
