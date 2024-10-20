@@ -26,14 +26,21 @@ public class CityInfoContext(DbContextOptions<CityInfoContext> dbContextOptions)
                 {
                     Id = 1,
                     Description = "The one with that big park."
-                }, new City("Antwerp")
+                }, 
+                new City("Antwerp")
                 {
                     Id = 2,
                     Description = "The one with the cathedral that was never really finished."
-                }, new City("Paris")
+                }, 
+                new City("Paris")
                 {
                     Id = 3,
                     Description = "The one with that big tower."
+                },
+                new City("Brisbane")
+                {
+                    Id = 4,
+                    Description = "The one with that big river."
                 }
             );
 
@@ -75,6 +82,12 @@ public class CityInfoContext(DbContextOptions<CityInfoContext> dbContextOptions)
                     Id = 6,
                     CityId = 3,
                     Description = "The world's largest museum."
+                },
+                new PointOfInterest("The Brisbane River")
+                {
+                    Id = 7,
+                    CityId = 4,
+                    Description = "The river that runs through Brisbane."
                 }
             );
     }
