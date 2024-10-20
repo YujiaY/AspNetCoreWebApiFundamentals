@@ -5,6 +5,7 @@ using AutoMapper;
 using CityInfo_Dev.Entities;
 using CityInfo_Dev.Models;
 using CityInfo_Dev.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 #endregion
@@ -14,6 +15,7 @@ namespace CityInfo_Dev.Controllers;
 [ApiController]
 // [controller] is a token that will be replaced by the name of the controller, in this case, Cities
 // [Route("api/[controller]")]
+[Authorize]
 [Route("api/cities")]
 public class CitiesController(ICityInfoRepository cityInfoRepository, IMapper mapper) : ControllerBase // Controller
 {
