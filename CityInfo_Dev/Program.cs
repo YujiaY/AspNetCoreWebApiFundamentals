@@ -1,6 +1,7 @@
 using CityInfo_Dev;
 using CityInfo_Dev.DbContexts;
 using CityInfo_Dev.Services;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -79,6 +80,11 @@ builder.Services.AddTransient<IMailService, LocalMailService>();
 builder.Services.AddTransient<IMailService, CloudMailService>();
 #endif
 
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -86,6 +92,8 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler();
 }
+
+app.UseForwardedHeaders();
 
 if (app.Environment.IsDevelopment())
 {
