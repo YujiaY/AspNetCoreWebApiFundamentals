@@ -1,7 +1,7 @@
 using AutoMapper;
 using CityInfo_Dev.Entities;
 using CityInfo_Dev.Models;
-using CityInfo.API.Models;
+using CityInfo_Dev.Models;
 
 namespace CityInfo_Dev.Profiles;
 

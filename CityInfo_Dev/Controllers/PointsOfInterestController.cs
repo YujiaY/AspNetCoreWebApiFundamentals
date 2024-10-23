@@ -2,7 +2,7 @@ using AutoMapper;
 using CityInfo_Dev.Entities;
 using CityInfo_Dev.Models;
 using CityInfo_Dev.Services;
-using CityInfo.API.Models;
+using CityInfo_Dev.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;

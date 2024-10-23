@@ -4,10 +4,14 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-      <UserSecretsId>d41c7db1-7a47-4fcf-b9d2-362e44f081cb</UserSecretsId>
+        <UserSecretsId>d41c7db1-7a47-4fcf-b9d2-362e44f081cb</UserSecretsId>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <DocumentationFile>CityInfo_Dev.xml</DocumentationFile>
   </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
+        <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
         <PackageReference Include="AutoMapper" Version="13.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.8" />

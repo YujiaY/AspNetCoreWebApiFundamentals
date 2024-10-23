@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CityInfo_Dev</name>
+    </assembly>
+    <members>
+        <member name="T:CityInfo_Dev.Migrations.Initial">
+            <inheritdoc />
+        </member>
+        <member name="M:CityInfo_Dev.Migrations.Initial.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CityInfo_Dev.Migrations.Initial.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CityInfo_Dev.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CityInfo_Dev.Migrations.InitialDataSeed">
+            <inheritdoc />
+        </member>
+        <member name="M:CityInfo_Dev.Migrations.InitialDataSeed.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CityInfo_Dev.Migrations.InitialDataSeed.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CityInfo_Dev.Migrations.InitialDataSeed.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CityInfo_Dev.Migrations.AddCityBrisbane">
+            <inheritdoc />
+        </member>
+        <member name="M:CityInfo_Dev.Migrations.AddCityBrisbane.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CityInfo_Dev.Migrations.AddCityBrisbane.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CityInfo_Dev.Migrations.AddCityBrisbane.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CityInfo_Dev.Services.ConfigureSwaggerGenOptions">
+            <summary>
+            Configures the Swagger generation options.  The IConfigureOptions approach is used to avoid having to 
+            create an in-between service provider simply to get an IApiVersionDescriptionProvider 
+            (which is required to created versioned OpenAPI specifications)
+            </summary> 
+        </member>
+        <member name="M:CityInfo_Dev.Services.ConfigureSwaggerGenOptions.#ctor(Asp.Versioning.ApiExplorer.IApiVersionDescriptionProvider)">
+            <summary>
+            Configures the Swagger generation options.  The IConfigureOptions approach is used to avoid having to 
+            create an in-between service provider simply to get an IApiVersionDescriptionProvider 
+            (which is required to created versioned OpenAPI specifications)
+            </summary> 
+        </member>
+    </members>
+</doc>

@@ -1,3 +1,5 @@
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using CityInfo_Dev;
 using CityInfo_Dev.DbContexts;
 using CityInfo_Dev.Services;
@@ -5,8 +7,10 @@ using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -54,8 +58,22 @@ builder.Services.AddControllers(options =>
 
 builder.Services.AddProblemDetails();
 
+builder.Services.AddApiVersioning(setupAction =>
+    {
+        setupAction.ReportApiVersions = true;
+        setupAction.AssumeDefaultVersionWhenUnspecified = true;
+        setupAction.DefaultApiVersion = new ApiVersion(1, 0);
+    }).AddMvc()
+    .AddApiExplorer(setupAction =>
+    {
+        setupAction.SubstituteApiVersionInUrl = true;
+    });
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+// Swagger options are configured in ConfigureSwaggerGenOptions with an IConfigureOptions approach
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerGenOptions>();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
@@ -122,7 +140,16 @@ app.UseForwardedHeaders();
 // if (app.Environment.IsDevelopment())
 // {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(setupAction =>
+    {
+        var descriptions = app.DescribeApiVersions();
+        foreach (var description in descriptions)
+        {
+            setupAction.SwaggerEndpoint(
+                $"/swagger/{description.GroupName}/swagger.json",
+                description.GroupName.ToUpperInvariant());
+        }
+    });
 // }
 
 app.UseHttpsRedirection();

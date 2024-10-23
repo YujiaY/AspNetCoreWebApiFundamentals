@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 
-namespace CityInfo.API.Controllers
+namespace CityInfo_Dev.Controllers
 {
     [Route("api/files")]
     [ApiController]
