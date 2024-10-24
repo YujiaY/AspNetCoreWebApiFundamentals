@@ -1,5 +1,7 @@
 using Asp.Versioning;
-using Asp.Versioning.ApiExplorer;
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using CityInfo_Dev;
 using CityInfo_Dev.DbContexts;
 using CityInfo_Dev.Services;
@@ -31,6 +33,13 @@ if (environment == Environments.Development)
 }
 else
 {
+    var secretClient = new SecretClient(
+        new Uri("https://azure-api-test.vault.azure.net/"),
+        new DefaultAzureCredential());
+    
+    builder.Configuration.AddAzureKeyVault(secretClient,
+        new KeyVaultSecretManager());
+
     builder.Host.UseSerilog((context, loggerConfiguration) => loggerConfiguration
         .MinimumLevel.Debug()
         .WriteTo.Console()
@@ -102,7 +111,7 @@ builder.Services.AddAuthentication("Bearer")
             ValidIssuer = builder.Configuration["Authentication:Issuer"],
             ValidAudience = builder.Configuration["Authentication:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(
-                Convert.FromBase64String(builder.Configuration["Authentication:SecretForKey"]))
+                Convert.FromBase64String(builder.Configuration["Authentication:SecretForKey"] ?? "SecretForKey:Authentication:SecretForKey"))
         };
     });
 
